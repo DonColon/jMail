@@ -6,6 +6,7 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
+
 public class AuthenticatedSessionProvider extends SessionProvider
 {
 	private final String username;
@@ -44,7 +45,6 @@ public class AuthenticatedSessionProvider extends SessionProvider
 	{
 		return this.username;
 	}
-
 
 	protected String getPassword()
 	{

@@ -6,6 +6,7 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
+
 public class SslSessionProvider extends AuthenticatedSessionProvider
 {
 
