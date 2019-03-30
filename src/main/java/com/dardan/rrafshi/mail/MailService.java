@@ -25,26 +25,33 @@ public class MailService
 	}
 
 
-	public void send(final Email email) throws MessagingException
+	public void send(final Email email)
+		throws MailException.FailedSendingMail
 	{
-		final Message message = new MimeMessage(this.provider.getSession());
-		message.setSubject(email.getSubject());
+		try {
+			final Message message = new MimeMessage(this.provider.getSession());
+			message.setSubject(email.getSubject());
 
-		final Multipart multipart = this.createMultipart(email.getBody());
-		message.setContent(multipart);
+			final Multipart multipart = this.createMultipart(email.getBody());
+			message.setContent(multipart);
 
-		message.setFrom(email.getFromAddress());
+			message.setFrom(email.getFromAddress());
 
-		message.addRecipients(Message.RecipientType.TO,
-				email.getToAddresses().toArray(new InternetAddress[email.getToAddresses().size()]));
+			message.addRecipients(Message.RecipientType.TO,
+					email.getToAddresses().toArray(new InternetAddress[email.getToAddresses().size()]));
 
-		message.addRecipients(Message.RecipientType.CC,
-				email.getCcAddresses().toArray(new InternetAddress[email.getCcAddresses().size()]));
+			message.addRecipients(Message.RecipientType.CC,
+					email.getCcAddresses().toArray(new InternetAddress[email.getCcAddresses().size()]));
 
-		message.addRecipients(Message.RecipientType.BCC,
-				email.getBccAddresses().toArray(new InternetAddress[email.getBccAddresses().size()]));
+			message.addRecipients(Message.RecipientType.BCC,
+					email.getBccAddresses().toArray(new InternetAddress[email.getBccAddresses().size()]));
 
-		Transport.send(message);
+			Transport.send(message);
+
+		} catch (final MessagingException exception) {
+
+			throw new MailException.FailedSendingMail("Failed to send the mail '" + email.getSubject() + "'", exception);
+		}
 	}
 
 	private Multipart createMultipart(final EmailBody body)
@@ -57,9 +64,8 @@ public class MailService
 
 		} catch (final MessagingException exception) {
 
-			throw new RuntimeException("Failed to add email body: " + body.getContent(), exception);
+			throw new MailException.FailedAttachingBody("Failed to add email body: " + body.getContent(), exception);
 		}
 		return multipart;
 	}
-
 }

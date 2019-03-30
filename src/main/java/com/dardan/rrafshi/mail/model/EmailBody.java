@@ -18,6 +18,8 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.stringtemplate.v4.ST;
 
+import com.dardan.rrafshi.mail.MailException;
+
 
 public class EmailBody
 {
@@ -119,7 +121,7 @@ public class EmailBody
 
 			} catch (final MessagingException exception) {
 
-				throw new RuntimeException("Failed to add file attachment '" + file.getName() + "' to email", exception);
+				throw new MailException.FailedAttachingFile("Failed to add file attachment '" + file.getName() + "' to email", exception);
 			}
 			return this;
 		}
@@ -136,10 +138,10 @@ public class EmailBody
 				this.multipartMail.addBodyPart(fileBodyPart);
 
 			} catch (final IOException exception) {
-				throw new RuntimeException("Failed to add file attachment '" + fileName + "' to email", exception);
+				throw new MailException.FailedAttachingFile("Failed to add file attachment '" + fileName + "' to email", exception);
 
 			} catch (final MessagingException exception) {
-				throw new RuntimeException("Failed to add file attachment '" + fileName + "' to email", exception);
+				throw new MailException.FailedAttachingFile("Failed to add file attachment '" + fileName + "' to email", exception);
 			}
 			return this;
 		}
